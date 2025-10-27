@@ -1,6 +1,6 @@
 from django.db import models
 
-from melodify.usuarios.models import Artista, Usuario
+from usuarios.models import Artista, Usuario
 
 class Cancion(models.Model):
     nombre = models.CharField(max_length=100)

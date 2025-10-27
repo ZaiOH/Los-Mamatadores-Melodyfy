@@ -1,7 +1,15 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 
-class Usuario(AbstractUser):
+class Usuario(AbstractBaseUser):
+    # Eliminamos los campos que no vamos a utilizar y que nos van a estorbar.
+    is_superuser = None
+    first_name = None
+    last_name = None
+    is_staff = None
+    is_active = None
+    groups = None
+    user_permitions = None
     pass
 
 class Artista(models.Model):

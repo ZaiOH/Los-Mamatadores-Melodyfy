@@ -1,6 +1,6 @@
 from django.db import models
 
-from melodify.usuarios.models import Usuario
+from usuarios.models import Usuario
 
 class Notificacion(models.Model):
     fecha_creacion = models.DateField()
