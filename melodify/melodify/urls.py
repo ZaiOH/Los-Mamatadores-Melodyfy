@@ -19,6 +19,6 @@ from django.urls import path
 from users.views import see_user
 
 urlpatterns = [
-    path('', admin.site.urls),
-    path('users/', see_user)
+    path('admin/', admin.site.urls),
+    path('users/<str:username>', see_user)
 ]
