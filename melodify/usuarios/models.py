@@ -10,7 +10,7 @@ class Usuario(AbstractBaseUser):
     is_active = None
     groups = None
     user_permitions = None
-    pass
+    fecha_nacimiento = models.DateField()
 
 class Artista(models.Model):
     usuario = models.OneToOneField(
