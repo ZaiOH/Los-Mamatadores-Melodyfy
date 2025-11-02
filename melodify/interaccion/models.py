@@ -5,7 +5,7 @@ from contenido.models import Cancion, LDR
 
 class Reporte(models.Model):
     cancion = models.ForeignKey(Cancion, models.CASCADE, related_name="reportado")
-    reportador = models.ForeignKey(Usuario)
+    reportador = models.ForeignKey(Usuario, models.CASCADE)
     motivo = models.CharField(max_length=255)
     
 
@@ -15,8 +15,8 @@ class Invitacion(models.Model):
     intentos = models.PositiveSmallIntegerField()
 
 class Seguir(models.Model):
-    seguidor = models.ForeignKey(Usuario, models.CASCADE)
-    seguido = models.ForeignKey(Usuario, models.CASCADE)
+    seguidor = models.ForeignKey(Usuario, models.CASCADE, related_name="usuario_seguidor")
+    seguido = models.ForeignKey(Usuario, models.CASCADE, related_name="usuario_seguido")
     fecha = models.DateTimeField()
 
 class CancionLike(models.Model):
