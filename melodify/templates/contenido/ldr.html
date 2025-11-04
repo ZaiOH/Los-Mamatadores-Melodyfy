@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+<div class="title-container">
+  {% if is_editor %}
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <form method="post" style="display: flex; align-items: center; gap: 5px;">
+        {% csrf_token %}
+        <input type="text" name="renombre" value="{{ nombre }}" style="font-size: 1.5em; padding: 5px;">
+        <button type="submit" style="background: none; border: none; cursor: pointer;">
+            ✏️
+        </button>
+    </form>
+  </div>
+  {% else %}
+  <h1>{{ nombre }}<h1>
+  {% endif %}
+</div>
+{% endblock titulo %}
+
+
+{% block contenido %}
+  <div class="scroll-container">
+    <div class="songs-list">
+      {% for cancion in canciones %}
+      <div class="song-item" data-song="Blinding Lights">
+        <div class="album-art">🎵</div>
+        <div class="song-details">
+          <div class="song-title">{{ cancion.nombre }}</div>
+          <div class="song-artist">{{ cancion.autor.usuario.nombre_usuario }}</div>
+        </div>
+        <div class="song-duration">3:20</div>
+        <button class="play-btn">▶</button>
+      </div>
+      {% endfor %}
+      {% if is_editor %}
+      <div class="add-song-item" id="add-song-btn">
+        <button class="add-btn">+</button>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
