@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   music player
+  </title>
+  <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.7/mediaelementplayer.min.css" rel="stylesheet"/>
+  <link href="{% static './style.css' %}" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+
+ </head>
+ <body>
+
+ ]
+  {% include 'main.html' %}
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.7/mediaelement-and-player.min.js">
+  </script>
+  <script src="{% static './script.js' %}">
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const audio = document.getElementById('fc-media');  // Replace with the actual ID of your audio element
+        const lyricsContainer = document.getElementById('song-lyrics');
+        let currentLyricIndex = 0;
+
+        // Retrieve the lyrics data as a JSON string
+        const lyricsData = JSON.parse(document.getElementById('song-lyrics').getAttribute('data-lyrics'));
+
+        audio.addEventListener('timeupdate', function () {
+          const currentTime = audio.currentTime;
+
+          // Find the current lyrics based on the time
+          while (currentLyricIndex < lyricsData.length - 1 && currentTime >= timeToSeconds(lyricsData[currentLyricIndex + 1].time)) {
+            currentLyricIndex++;
+          }
+
+          // Update the displayed lyrics
+          lyricsContainer.innerText = lyricsData[currentLyricIndex].lyrics;
+        });
+
+        function timeToSeconds(time) {
+          const [minutes, seconds] = time.split(':').map(parseFloat);
+          return minutes * 60 + seconds;
+        }
+      });
+
+  </script>
+  
+ </body>
+</html>
