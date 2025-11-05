@@ -1,0 +1,66 @@
+<html>
+   <head>
+    <meta charset="utf-8"/>
+    <title>
+      music player
+    </title>
+   </head>
+   <body>
+    
+ 
+    
+      <div class="music-player">
+        {% for item in page_obj %}
+       <div class="spotify-player">
+  <div class="player-left">
+    <div class="song-info">
+      <h4 class="song-title">{{ item.title }}</h4>
+      <p class="artist-name">{{ item.artist }}</p>
+    </div>
+  </div>
+
+  <div class="player-center">
+    <div class="controls">
+      <button class="play-btn" title="Play/Pause">
+        <svg viewBox="0 0 16 16"><path d="M4.018 14L14.41 8 4.018 2z"/></svg>
+      </button>
+
+    </div>
+
+    <audio id="audio-{{ forloop.counter }}" preload="metadata" class="audio-player">
+      <source src="{% if item.audio_file %}{{ item.audio_file.url }}{% else %}{{ item.audio_link }}{% endif %}" type="audio/mp3">
+    </audio>
+  </div>
+
+  <div class="player-right">
+    <button class="like-btn" title="Like">
+      <svg viewBox="0 0 16 16"><path d="M13.764 2.727a4.057 4.057 0 00-5.488-.253.558.558 0 01-.31.112.531.531 0 01-.311-.112 4.054 4.054 0 00-5.487.253A4.05 4.05 0 00.974 5.61c0 1.089.424 2.113 1.168 2.855l4.462 5.223a1.791 1.791 0 002.726 0l4.435-5.195A4.052 4.052 0 0014.96 5.61a4.057 4.057 0 00-1.196-2.883z"/></svg>
+    </button>
+  </div>
+</div>
+
+    
+    
+    {% endfor %}
+.
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const playButtons = document.querySelectorAll(".play-btn");
+  playButtons.forEach((btn, index) => {
+    const audio = document.getElementById(`audio-${index+1}`);
+    btn.addEventListener("click", () => {
+      if (audio.paused) {
+        document.querySelectorAll("audio").forEach(a => a.pause());
+        audio.play();
+        btn.querySelector("svg path").setAttribute("d", "M3 2h3v12H3zm7 0h3v12h-3z"); // pause icon
+      } else {
+        audio.pause();
+        btn.querySelector("svg path").setAttribute("d", "M4.018 14L14.41 8 4.018 2z"); // play icon
+      }
+    });
+  });
+});
+</script>
+
+   </body>
+  </html>
