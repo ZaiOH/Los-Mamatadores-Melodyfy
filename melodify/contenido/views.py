@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
-from .models import LDR
+from contenido.models import LDR, Cancion
+from usuarios.models import Usuario
 
 class VistaPrincipal(TemplateView):
     template_name = "base.html"
@@ -26,6 +27,30 @@ def ver_ldr(request, ldr_id=None):
 
     return render(request, 'contenido/ldr.html', context)
 
+def buscar_contenido(request):
+    query = request.GET.get('q', '')
+    tipo = int(request.GET.get("tipo", 0))
+    resultados = []
+
+    if query:
+        if tipo == 0:
+            resultados = Usuario.objects.filter(nombre_usuario__icontains=query)
+        elif tipo == 1: 
+            resultados = Cancion.objects.filter(nombre__icontains=query)
+        elif tipo == 2:
+            resultados = LDR.objects.filter(nombre__icontains=query)
+
+    context = {
+        'query': query,
+        'resultados': resultados,
+        'tipo': tipo,
+    }
+
+    return render(request, "contenido/busqueda.html", context=context)
+
+@login_required
+def ver_ldr(request):
+    return redirect("")
 @login_required
 def crear_ldr(request):
     ldr = LDR(nombre="Nueva lista de reproduccion")
