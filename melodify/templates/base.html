@@ -20,9 +20,11 @@
         <div class="title">{% block titulo%}{% endblock titulo %}</div>
 
         <div class="nav-buttons">
-            <button class="nav-button">
-                <i class="fas fa-search"></i>
-            </button>
+           <a href="{% url  'buscar'%}">
+                <button class="nav-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </a> 
             <button class="nav-button">
                 <i class="fas fa-bell"></i>
             </button>

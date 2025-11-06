@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<form method="get" action="{% url 'buscar' %}">
+    <input type="text" name="q" value="{{ query }}" placeholder="Enter name to search...">
+    
+    <select name="tipo">
+        <option value=0 {% if tipo == 0 %}selected{% endif %}>Usuario</option>
+        <option value=1 {% if tipo == 1 %}selected{% endif %}>Canción</option>
+        <option value=2 {% if tipo == 2 %}selected{% endif %}>Lista de Reproducción</option>
+    </select>
+    
+    <button type="submit">Search</button>
+</form>
+{% if query %}
+    <h2>Resultados:</h2>
+    {% if resultados %}
+    {% for resultado in resultados %}
+    <li>{{ resultado.nombre }}</li>
+    {% endfor %}
+    {% else %}
+    <h1>No se encntraron coincidencias :c</h1>
+    {% endif %}
+    
+{% endif %}
+{% endblock %}

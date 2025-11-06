@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from contenido.views import VistaPrincipal
+from contenido.views import VistaPrincipal, buscar_contenido
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', VistaPrincipal.as_view(), name = 'Inicio')
+    path('', VistaPrincipal.as_view(), name = 'Inicio'),
+    path('buscar/', buscar_contenido, name = "buscar"),
 ]
