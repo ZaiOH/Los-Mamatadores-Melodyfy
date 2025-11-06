@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.urls import path
 
 from contenido.views import VistaPrincipal, ver_ldr
+from usuarios.views import login_vista
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('login/', login_vista, name = 'login'),
     path('', VistaPrincipal.as_view(), name = 'inicio'),
     path('ldr/<int:ldr_id>/', ver_ldr, name = 'ver-ldr')
 ]

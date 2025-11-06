@@ -11,9 +11,11 @@ class Usuario(AbstractBaseUser):
     groups = None
     user_permitions = None
     fecha_nacimiento = models.DateField()
+    email = models.EmailField(unique=True)
     
     nombre_usuario = models.CharField(max_length=30)
-    USERNAME_FIELD = 'nombre_usuario'
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['email', 'nombre_usuario', 'password']
 
 class Artista(models.Model):
     usuario = models.OneToOneField(
