@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
     {% load static %} 
-    <link rel="stylesheet" href="{%static 'css/main.css'%}"}> 
+    <link rel="stylesheet" href="../../static/css/main.css"> 
     <style>
         * {
             margin: 0;
@@ -15,7 +15,7 @@
         }
         
         body {
-            background: #7b5ac4;
+            background: #7B5AC4; /* Fondo púrpura */
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -24,16 +24,38 @@
         }
         
         .login-container {
-            background-color: white;
+            /* Cambio de color del contenedor a un tono más oscuro */
+            background-color: #C8746B; 
             border-radius: 10px;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 400px;
-            padding: 30px;
+            /* Se quita el padding para que el logo y el fondo superior lo ocupen */
+            padding: 0; 
             position: relative;
             animation: fadeIn 0.5s ease-out;
+            overflow: hidden; /* Para que los bordes redondeados se apliquen al contenido interno */
         }
-        
+
+        /* Estilos del logo y el área superior */
+        .logo-container {
+            background-color: black; /* Color de fondo superior */
+            padding: 30px 20px 20px 20px; /* Espacio alrededor del logo */
+            text-align: center;
+        }
+
+        .melodify-logo {
+            /* Asegúrate de tener una imagen de logo con el texto "Melodify" y un efecto de brillo */
+            width: 150px; 
+            height: auto;
+        }
+
+        /* Contenido inferior, donde está el formulario */
+        .login-header, .form-group, .button-group {
+            padding-left: 30px; 
+            padding-right: 30px;
+        }
+
         .close-btn {
             position: absolute;
             top: 15px;
@@ -41,61 +63,76 @@
             background: none;
             border: none;
             font-size: 24px;
-            color: #888;
+            /* Color blanco para el botón de cerrar */
+            color: white; 
             cursor: pointer;
             transition: color 0.3s;
+            z-index: 10; /* Asegura que esté por encima del logo */
         }
         
         .close-btn:hover {
-            color: #333;
+            color: #ccc;
         }
         
         .login-header {
             text-align: center;
+            /* Reducción del margen superior, ajustado para el nuevo diseño */
+            margin-top: 20px; 
             margin-bottom: 30px;
         }
         
         .login-header h1 {
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 10px;
+            /* Color del texto cambiado a blanco/claro */
+            color: black; 
+            font-size: 24px;
+            /* Quitamos el margin-bottom para el nuevo diseño */
+            margin-bottom: 0; 
+            font-weight: 500;
         }
         
-        .login-header p {
-            color: #666;
-            font-size: 14px;
-        }
+        /* Eliminamos los estilos para .login-header p ya que no está en el resultado */
         
         .form-group {
             margin-bottom: 20px;
         }
         
         .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
+            /* Se oculta la etiqueta ya que el placeholder se usa como texto principal */
+            display: none; 
         }
         
         .form-group input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
+            /* Ajuste del padding para hacerlo más pequeño */
+            padding: 10px 15px; 
+            /* Fondo claro para los inputs */
+            background-color: #F8ECEC; 
+            /* Borde más sutil o quitado */
+            border: 1px solid #C8746B; 
             border-radius: 5px;
             font-size: 16px;
             transition: border 0.3s;
         }
         
         .form-group input:focus {
-            border-color: #2575fc;
+            /* Mantenemos el estilo de enfoque pero con un color neutro */
+            border-color: #312638; 
             outline: none;
-            box-shadow: 0 0 0 2px rgba(37, 117, 252, 0.2);
+            box-shadow: 0 0 0 2px rgba(49, 38, 56, 0.2);
+        }
+
+        /* Contenedor para los dos botones, usando flexbox */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px; /* Espacio entre los botones */
+            margin-bottom: 30px; /* Margen inferior para el formulario */
         }
         
-        .login-btn {
-            width: 100%;
+        .login-btn, .register-btn {
+            /* Los dos botones ocuparán el mismo espacio */
+            width: 50%; 
             padding: 12px;
-            background: black;
             border: none;
             border-radius: 5px;
             color: white;
@@ -104,31 +141,40 @@
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
+
+        .login-btn {
+            background: black; /* Botón Ingresar negro */
+        }
+
+        .register-btn {
+            background: black; /* Botón Registrarse también negro */
         }
         
-        .login-btn:active {
+        /* Ajustamos los efectos hover para ambos botones */
+        .login-btn:hover, .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .login-btn:active, .register-btn:active {
             transform: translateY(0);
         }
-        
-        .login-footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #666;
+
+        .error-message {
+            /* Color de letra rojo */
+            color: red; 
+            /* Para separarlo de los campos y los botones */
+            margin-top: 5px;
+            margin-bottom: 20px; 
+            /* Centrar el texto (opcional) */
+            text-align: center; 
+            /* Asegúrate de que tenga el padding horizontal del formulario */
+            padding: 0 30px; 
+            /* Fuente un poco más audaz para resaltarlo */
+            font-weight: 500; 
         }
         
-        .login-footer a {
-            color: #2575fc;
-            text-decoration: none;
-        }
-        
-        .login-footer a:hover {
-            text-decoration: underline;
-        }
+        /* Eliminamos .login-footer ya que no está en el resultado */
         
         @keyframes fadeIn {
             from {
@@ -144,53 +190,55 @@
 </head>
 <body>
     <div class="login-container">
-        <a href="{% url 'inicio' %}" class="close-btn">&times;</a>
+        <a href="/users" class="close-btn">&times;</a>
         
-        <div class="login-header">
-            <h1>Iniciar Sesión</h1>
+        <div class="logo-container">
+            <img src="../../static/images/logo.png" alt="Melodify Logo" class="melodify-logo">
         </div>
 
-        {% if error %}
-        <p>Error: {{error}}</p>
-        {% endif %}
+        <div class="login-header">
+            <h1>Iniciar sesión</h1>
+        </div>
         
-        <form method="post" action="{% url 'login' %}">
+        <form method="post">
             {% csrf_token %}
-            
             <div class="form-group">
-                <label for="id_username">Correo Electrónico</label>
+                <label for="id_username"></label>
                 <input type="text" 
                        id="id_username" 
-                       name="email" 
-                       value="{{ form.username.value|default:'' }}"
+                       name="username" 
+                       value="{{ form.username.value}}"
+                       placeholder="Nombre Usuario"
                        required>
-                {% if form.username.errors %}
-                    <div class="field-errors">
-                        {% for error in form.username.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
             </div>
             
             <div class="form-group">
-                <label for="id_password">Contraseña</label>
+                <label for="id_password"></label>
                 <input type="password" 
                        id="id_password" 
-                       name="password" 
+                       name="password"
+                       value="{{ form.password.value}}"
+                       placeholder="Contraseña"
                        required>
-                {% if form.password.errors %}
-                    <div class="field-errors">
-                        {% for error in form.password.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
             </div>
             
             <input type="hidden" name="next" value="{{ next }}">
             
-            <button type="submit" class="login-btn">Iniciar Sesión</button>
+            {% if messages %}
+                {% for message in messages %}
+                <div class="error-message">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="button-group">
+                <button type="submit" class="login-btn">Ingresar</button>
+                <a href="/users/register" class="register-btn">
+                    <button type="button" class="register-btn">Registrarse</button>
+                </a>
+                
+            </div>
         </form>  
     </div>
 </body>

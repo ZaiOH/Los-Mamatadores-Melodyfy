@@ -8,8 +8,9 @@ class Cancion(models.Model):
         Artista,
         models.CASCADE,
     )
+    #imagen = models.ImageField()
     publicacion = models.DateField()
-    archivo = models.FilePathField()
+    archivo = models.FileField()
 
 class LDR(models.Model):
     nombre = models.CharField(max_length=100)
