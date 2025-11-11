@@ -13,6 +13,6 @@ class Usuario(AbstractBaseUser):
 class Artista(models.Model):
     usuario = models.OneToOneField(
         Usuario,
-        models.CASCADE,
+        on_delete = models.CASCADE,
         primary_key=True,
     )

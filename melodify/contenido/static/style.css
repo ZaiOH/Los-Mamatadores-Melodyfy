@@ -1,0 +1,126 @@
+.spotify-player {
+  background-color: #111111;
+  color: #EADEE3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-top: 1px solid #282828;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+.player-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.album-cover {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.song-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.song-title {
+  margin: 0;
+  font-size: 14px;
+  color: #EADEE3;
+  font-weight: bold;
+}
+
+.artist-name {
+  margin: 0;
+  font-size: 12px;
+  color: #EADEE3;
+}
+
+.player-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 5px;
+}
+
+.controls button {
+  background: none;
+  border: none;
+  color: #EADEE3;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.controls button:hover {
+  transform: scale(1.1);
+}
+
+.controls svg {
+  width: 20px;
+  height: 20px;
+  fill: #EADEE3;
+}
+
+.play-btn svg {
+  width: 32px;
+  height: 32px;
+  fill: #EADEE3; 
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 60%;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  cursor: pointer;
+  accent-color: #EADEE3;
+}
+
+.time-current,
+.time-total {
+  font-size: 11px;
+  color: #b3b3b3;
+}
+
+.player-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.like-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: #b3b3b3;
+}
+
+.like-btn:hover svg {
+  fill: #BA638A;
+}
