@@ -49,12 +49,10 @@ def buscar_contenido(request):
     return render(request, "contenido/busqueda.html", context=context)
 
 @login_required
-def ver_ldr(request):
-    return redirect("")
-@login_required
 def crear_ldr(request):
-    ldr = LDR(nombre="Nueva lista de reproduccion")
+    usuario = request.user
+    ldr = LDR.objects.create(nombre="Nueva lista de reproduccion")
     ldr.save()
     ldr.editores.add(request.user)
 
-    return redirect("")
+    return redirect("ver-ldr", ldr_id=ldr.id)

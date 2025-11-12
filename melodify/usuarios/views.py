@@ -18,7 +18,7 @@ def registrar_usuario(request):
 
 def login_usuario(request):
     if request.user.is_authenticated:
-        return redirect(request, 'base.html')
+        return redirect('inicio')
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
@@ -28,7 +28,7 @@ def login_usuario(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, f"Bienvenido, {user.username}!")
-                return redirect('home')
+                return redirect('inicio')
             else:
                 messages.error(request, "Nombre de usuario o contraseña incorrectos.")
     else:

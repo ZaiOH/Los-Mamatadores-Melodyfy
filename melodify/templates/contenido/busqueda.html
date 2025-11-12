@@ -16,7 +16,21 @@
     <h2>Resultados:</h2>
     {% if resultados %}
     {% for resultado in resultados %}
-    <li>{{ resultado.nombre }}</li>
+        {% if tipo == 0 %}
+        <a href= {% url 'ver-ldr' ldr_id=resultado.id%}>
+            <li>{{ resultado.nombre }}</li>
+        </a>
+        {% endif %}
+        {% if tipo == 1 %}
+        <a href= {% url 'ver-ldr' ldr_id=resultado.id%}>
+            <li>{{ resultado.nombre }}</li>
+        </a>
+        {% endif %}
+        {% if tipo == 2 %}
+            <a href= {% url 'ver-ldr' ldr_id=resultado.id%}>
+                <li>{{ resultado.nombre }}</li>
+            </a>
+        {% endif %}
     {% endfor %}
     {% else %}
     <h1>No se encntraron coincidencias :c</h1>
