@@ -1,5 +1,5 @@
 from django import forms
 
 class LDRNombreForm(forms.Form):
-    nuevo_nombre = forms.CharField("Nuevo Nombre de la Lista", max_length=100)
+    nuevo_nombre = forms.CharField("Nuevo Nombre de la Lista")
 

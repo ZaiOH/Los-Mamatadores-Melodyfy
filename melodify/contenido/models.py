@@ -1,10 +1,11 @@
+from django.contrib.auth.models import User
 from django.db import models
 
-from usuarios.models import Artista, Usuario
+from usuarios.models import Artista
 
 class Cancion(models.Model):
     nombre = models.CharField(max_length=100)
-    autor = models.CharField(max_length=100)
+    autor = models.ForeignKey(Artista, on_delete=models.CASCADE)
     publicacion = models.DateField()
     archivo = models.FileField(blank=True,null=True)
     audio_link = models.CharField(max_length=200,blank=True,null=True)
@@ -16,5 +17,5 @@ class Cancion(models.Model):
 
 class LDR(models.Model):
     nombre = models.CharField(max_length=100)
-    editores = models.ManyToManyField(Usuario)
+    editores = models.ManyToManyField(User)
     canciones = models.ManyToManyField(Cancion)

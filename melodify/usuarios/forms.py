@@ -1,9 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-
-from usuarios.models import Usuario
 
 class RegistroFormUsuario(forms.ModelForm):
     contraseña = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
@@ -15,8 +14,8 @@ class RegistroFormUsuario(forms.ModelForm):
     )
 
     class Meta:
-        model = Usuario
-        fields = ['nombre_usuario', 'email', 'fecha_nacimiento']
+        model = User
+        fields = ['username', 'email']
 
     def clean_password_confirm(self):
         contraseña = self.cleaned_data.get('contraseña')

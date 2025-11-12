@@ -1,8 +1,8 @@
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from contenido.models import LDR, Cancion
-from usuarios.models import Usuario
 
 class VistaPrincipal(TemplateView):
     template_name = "base.html"
@@ -34,7 +34,7 @@ def buscar_contenido(request):
 
     if query:
         if tipo == 0:
-            resultados = Usuario.objects.filter(nombre_usuario__icontains=query)
+            resultados = User.objects.filter(nombre_usuario__icontains=query)
         elif tipo == 1: 
             resultados = Cancion.objects.filter(nombre__icontains=query)
         elif tipo == 2:
