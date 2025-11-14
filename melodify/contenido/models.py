@@ -17,5 +17,5 @@ class Cancion(models.Model):
 
 class LDR(models.Model):
     nombre = models.CharField(max_length=100)
-    editores = models.ManyToManyField(User)
+    editores = models.ManyToManyField(User, db_column="usuario_id")
     canciones = models.ManyToManyField(Cancion)

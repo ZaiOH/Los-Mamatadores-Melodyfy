@@ -8,6 +8,7 @@ class VistaPrincipal(TemplateView):
     template_name = "base.html"
 
 def ver_ldr(request, ldr_id=None):
+    usuario = request.user
     ldr = get_object_or_404(LDR, id=ldr_id)
 
     #TODO: checar que es editor
@@ -16,7 +17,10 @@ def ver_ldr(request, ldr_id=None):
         ldr.save()
         return redirect("ver-ldr", ldr_id=ldr_id)
     canciones = ldr.canciones.all()
-    is_editor = False#ldr.editores.contains(request.user)
+    if usuario is not None and not usuario.is_anonymous:
+        is_editor = ldr.editores.contains(usuario)
+    else:
+        is_editor = False
 
     context = {
         'id': ldr_id,
@@ -53,6 +57,6 @@ def crear_ldr(request):
     usuario = request.user
     ldr = LDR.objects.create(nombre="Nueva lista de reproduccion")
     ldr.save()
-    ldr.editores.add(request.user)
+    ldr.editores.add(usuario)
 
     return redirect("ver-ldr", ldr_id=ldr.id)
