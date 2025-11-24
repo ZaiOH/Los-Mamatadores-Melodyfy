@@ -160,6 +160,26 @@ body {
     color: #e94560;
 }
 
+.remove-song-button {
+    background: none;
+    border: none;
+    color: #000;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.remove-song-button:hover {
+    color: #333;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.remove-song-button:active {
+    transform: scale(0.95);
+}
+
 .play-btn {
     background: #e94560;
     color: white;
@@ -255,7 +275,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    max-width: 75%; 
+    max-width: 75%;
     height: 80vh;
     max-height: 90vh;
     background: white;
@@ -306,7 +326,7 @@ body {
     align-items: center;
     gap: 15px;
     margin-bottom: 20px;
-    padding-right: 40px; 
+    padding-right: 40px;
     flex-shrink: 0;
 }
 
@@ -326,8 +346,10 @@ body {
     gap: 8px;
     white-space: nowrap;
     box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
-    min-width: 50px; /* Ensure consistent size */
-    height: 48px; /* Match input height */
+    min-width: 50px;
+    /* Ensure consistent size */
+    height: 48px;
+    /* Match input height */
 }
 
 .search-button:hover {

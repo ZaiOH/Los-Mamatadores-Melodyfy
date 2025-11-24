@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from contenido.views import VistaPrincipal, buscar_canciones, buscar_usuarios, ver_ldr, buscar_contenido, crear_ldr, añadir_cancion_ldr
+from contenido.views import VistaPrincipal, buscar_canciones, buscar_usuarios, ver_ldr, buscar_contenido, crear_ldr, añadir_cancion_ldr, eliminar_cancion_ldr
 from usuarios.views import registrar_usuario, login_usuario, logout_usuario 
 
 urlpatterns = [
@@ -27,6 +27,7 @@ urlpatterns = [
     path('', VistaPrincipal.as_view(), name = 'inicio'),
     path('ldr/<int:ldr_id>/', ver_ldr, name = 'ver-ldr'),
     path('aldr/<int:ldr_id>/<int:cid>', añadir_cancion_ldr, name='añadir-ldr'),
+    path('eldr/<int:ldr_id>/<int:cid>', eliminar_cancion_ldr, name='eliminar-ldr'), 
     path('crear-ldr/', crear_ldr, name = 'crear-ldr'),
     path('buscar/', buscar_contenido, name = "buscar"),
     path('usuarios', buscar_usuarios),

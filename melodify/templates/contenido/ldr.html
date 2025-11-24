@@ -31,8 +31,11 @@
         <div class="song-title">{{ cancion.nombre }}</div>
         <div class="song-artist">{{ cancion.autor.usuario.nombre_usuario }}</div>
       </div>
-      <div class="song-duration">3:20</div>
-      <button class="play-btn">▶</button>
+      {% if  is_editor %}
+      <button class="remove-song-button", onclick="eliminarCancion('{{ cancion.id }}')">
+        <i class="fa fa-trash" aria-hidden="true"></i>
+      </button>
+      {% endif %}
     </div>
     {% endfor %}
     {% if is_editor %}
@@ -59,7 +62,17 @@
 <script>
   const ldr_id = "{{ id }}";
   const canciones = JSON.parse("{{ ids }}");
-  console.log(canciones);
+  
+  async function eliminarCancion(cid) {
+    try {
+      let response = await fetch(`${window.location.origin}/eldr/${ldr_id}/${cid}`);
+      window.location.reload();
+    } catch (error) {
+      alert("Error al eliminar la canción: \n", error);
+    }
+  }
+
+
   document.addEventListener('DOMContentLoaded', async function () {
     const openBtn = document.getElementById('add-btn');
     const closeBtn = document.getElementById('closeSearch');
@@ -68,13 +81,12 @@
     const botonBusqueda = document.getElementById('buscarCancion');
     const contenedorBusqueda = document.getElementById('searchDisplay');
 
-    // Open search window
+    // Abrir ventana de búsqueda de canciones
     openBtn.addEventListener('click', function () {
       searchWindow.style.display = 'flex';
       searchInput.focus();
     });
 
-    // Close search window
     function cerrarBusqueda() {
       searchWindow.style.display = 'none';
     }
@@ -112,7 +124,7 @@
       if (datos.length <= 0) {
         const mensaje = document.createElement('p');
         mensaje.innerHTML = "No se encontraron resultados :c";
-        
+
         contenedorBusqueda.appendChild(mensaje);
         return;
       }
@@ -163,22 +175,6 @@
       }
     });
     botonBusqueda.addEventListener('click', buscarCanciones);
-
-    // Handle search form submission
-    /* searchForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const searchTerm = searchInput.value.trim();
-
-      if (searchTerm) {
-        alert(`Searching for: "${searchTerm}"\n\nThis is a demo. In a real application, this would perform an actual search.`);
-        searchInput.value = '';
-        cerrarBusqueda();
-      } else {
-        alert('Please enter a search term');
-        searchInput.focus();
-      }
-    }); */
-
   });
 </script>
 {% endblock %}

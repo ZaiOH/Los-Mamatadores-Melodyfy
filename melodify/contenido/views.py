@@ -89,4 +89,16 @@ def añadir_cancion_ldr(request, ldr_id, cid):
         ldr.canciones.add(cancion)
         return HttpResponse(status=204)
     else:
-        return HtttpResponse("No eres editor de esta lista", status=500)
+        return HtttpResponse("No eres editor de esta lista", status=401)
+
+@login_required
+def eliminar_cancion_ldr(request, ldr_id, cid):
+    usuario = request.user
+    ldr = get_object_or_404(LDR, id=ldr_id)
+    cancion = get_object_or_404(Cancion, id=cid)
+
+    if ldr.editores.contains(usuario):
+        ldr.canciones.remove(cancion)
+        return HttpResponse(status=204)
+    else:
+        return HtttpResponse("No eres editor de esta lista", status=401)
