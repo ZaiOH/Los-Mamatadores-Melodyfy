@@ -1,43 +1,184 @@
 {% extends "base.html" %}
 
+{{ canciones.values_list|json_script:"canciones" }}
+
 {% block titulo %}
 <div class="title-container">
   {% if is_editor %}
   <div style="display: flex; align-items: center; gap: 10px;">
     <form method="post" style="display: flex; align-items: center; gap: 5px;">
-        {% csrf_token %}
-        <input type="text" name="renombre" value="{{ nombre }}" style="font-size: 1.5em; padding: 5px;">
-        <button type="submit" style="background: none; border: none; cursor: pointer;">
-            ✏️
-        </button>
+      {% csrf_token %}
+      <input type="text" name="renombre" value="{{ nombre }}" style="font-size: 1.5em; padding: 5px;">
+      <button type="submit" style="background: none; border: none; cursor: pointer;">
+        ✏️
+      </button>
     </form>
   </div>
   {% else %}
-  <h1>{{ nombre }}<h1>
+  <h1>{{ nombre }}</h1>
   {% endif %}
 </div>
 {% endblock titulo %}
 
 
 {% block contenido %}
-  <div class="scroll-container">
-    <div class="songs-list">
-      {% for cancion in canciones %}
-      <div class="song-item" data-song="Blinding Lights">
-        <div class="album-art">🎵</div>
-        <div class="song-details">
-          <div class="song-title">{{ cancion.nombre }}</div>
-          <div class="song-artist">{{ cancion.autor.usuario.nombre_usuario }}</div>
-        </div>
-        <div class="song-duration">3:20</div>
-        <button class="play-btn">▶</button>
+<div class="scroll-container">
+  <div class="songs-list">
+    {% for cancion in canciones %}
+    <div class="song-item" data-song="Blinding Lights">
+      <div class="album-art">🎵</div>
+      <div class="song-details">
+        <div class="song-title">{{ cancion.nombre }}</div>
+        <div class="song-artist">{{ cancion.autor.usuario.nombre_usuario }}</div>
       </div>
-      {% endfor %}
-      {% if is_editor %}
-      <div class="add-song-item" id="add-song-btn">
-        <button class="add-btn">+</button>
-      </div>
-      {% endif %}
+      <div class="song-duration">3:20</div>
+      <button class="play-btn">▶</button>
     </div>
+    {% endfor %}
+    {% if is_editor %}
+    <div class="add-song-item" id="add-song-btn">
+      <button class="add-btn" id="add-btn">+</button>
+    </div>
+    {% endif %}
   </div>
+</div>
+<div class="search-window" id="searchWindow">
+  <button class="close-btn" id="closeSearch">&times;</button>
+  <div class="search-header">
+    <button class="search-button" id="buscarCancion">
+      <i class="fas fa-search search-icon"></i>
+    </button>
+    <input type="text" class="search-input" id="searchInput" placeholder="Busca canciones para añadir">
+  </div>
+
+
+  <div class="search-display" id="searchDisplay">
+
+  </div>
+</div>
+<script>
+  const ldr_id = "{{ id }}";
+  const canciones = JSON.parse("{{ ids }}");
+  console.log(canciones);
+  document.addEventListener('DOMContentLoaded', async function () {
+    const openBtn = document.getElementById('add-btn');
+    const closeBtn = document.getElementById('closeSearch');
+    const searchWindow = document.getElementById('searchWindow');
+    const searchInput = document.getElementById('searchInput');
+    const botonBusqueda = document.getElementById('buscarCancion');
+    const contenedorBusqueda = document.getElementById('searchDisplay');
+
+    // Open search window
+    openBtn.addEventListener('click', function () {
+      searchWindow.style.display = 'flex';
+      searchInput.focus();
+    });
+
+    // Close search window
+    function cerrarBusqueda() {
+      searchWindow.style.display = 'none';
+    }
+
+    function crearResultado(elemento) {
+      const resultado = document.createElement('div');
+      resultado.className = 'card';
+      resultado.onclick = async function (e) {
+        try {
+          let response = await fetch(`${window.location.origin}/aldr/${ldr_id}/${elemento.id}`);
+          window.location.reload();
+        } catch (error) {
+          alert("Error al añadir la canción a la lista: ", error);
+        }
+      };
+
+      resultado.innerHTML = `
+        <div class="card-icon">
+          <i class="fa fa-music"></i>
+        </div>
+        <div class="card-content">
+          <div class="card-name">${elemento.nombre}</div>
+          <div class="card-author">By ${elemento.autor}</div>
+        </div>
+        <div>
+          <i class="fa fa-plus-circle"></i>
+        </div>
+      `;
+
+      return resultado;
+    }
+
+    function mostrarBusqueda(datos) {
+      //Si no hay datos poner un mensaje que lo indique
+      if (datos.length <= 0) {
+        const mensaje = document.createElement('p');
+        mensaje.innerHTML = "No se encontraron resultados :c";
+        
+        contenedorBusqueda.appendChild(mensaje);
+        return;
+      }
+      for (const usuario in datos) {
+        let resultado = crearResultado(datos[usuario]);
+        contenedorBusqueda.appendChild(resultado);
+      }
+    }
+
+    async function buscarUsuarios() {
+      const query = searchInput.value;
+      try {
+        let response = await fetch(`${window.location.origin}/usuarios?q=${query}`);
+        let json = await response.json();
+
+      } catch (error) {
+        alert("Error en la búsqueda de usuarios:\n", error);
+      }
+    }
+
+    async function buscarCanciones(e) {
+      const query = searchInput.value;
+      // Eliminamos los resultados que ya estaban.
+      contenedorBusqueda.replaceChildren();
+      try {
+        let response = await fetch(`${window.location.origin}/canciones?q=${query}`);
+        let json = await response.json();
+
+        // Eliminamos de la búsqueda a las canciones que ya están en la lista.
+        mostrarBusqueda(json.filter((cancion) => !canciones.includes(cancion.id)));
+      } catch (error) {
+        alert("Error en la búsqueda de canciones:\n", error);
+      }
+    }
+
+    async function añadirCancion(id) {
+      try {
+        let response = await fetch(`${window.location.origin}/aldr/${ldr_id}/${id}`);
+      } catch (error) {
+        alert("Error al añadir la canción solicitada: \n", error);
+      }
+    }
+
+    closeBtn.addEventListener('click', cerrarBusqueda);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        cerrarBusqueda();
+      }
+    });
+    botonBusqueda.addEventListener('click', buscarCanciones);
+
+    // Handle search form submission
+    /* searchForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const searchTerm = searchInput.value.trim();
+
+      if (searchTerm) {
+        alert(`Searching for: "${searchTerm}"\n\nThis is a demo. In a real application, this would perform an actual search.`);
+        searchInput.value = '';
+        cerrarBusqueda();
+      } else {
+        alert('Please enter a search term');
+        searchInput.focus();
+      }
+    }); */
+
+  });
+</script>
 {% endblock %}

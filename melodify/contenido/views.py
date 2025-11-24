@@ -1,4 +1,6 @@
 from django.contrib.auth.models import User
+from django.db.models import query
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
@@ -11,7 +13,6 @@ def ver_ldr(request, ldr_id=None):
     usuario = request.user
     ldr = get_object_or_404(LDR, id=ldr_id)
 
-    #TODO: checar que es editor
     if request.method == "POST" and "renombre" in request.POST:
         ldr.nombre = request.POST["renombre"]
         ldr.save()
@@ -26,7 +27,8 @@ def ver_ldr(request, ldr_id=None):
         'id': ldr_id,
         'is_editor': is_editor,
         'nombre': ldr.nombre,
-        'canciones': canciones
+        'canciones': canciones,
+        'ids': [c.id for c in canciones],
     }
 
     return render(request, 'contenido/ldr.html', context)
@@ -38,7 +40,7 @@ def buscar_contenido(request):
 
     if query:
         if tipo == 0:
-            resultados = User.objects.filter(nombre_usuario__icontains=query)
+            resultados = User.objects.filter(username__icontains=query)
         elif tipo == 1: 
             resultados = Cancion.objects.filter(nombre__icontains=query)
         elif tipo == 2:
@@ -59,4 +61,32 @@ def crear_ldr(request):
     ldr.save()
     ldr.editores.add(usuario)
 
-    return redirect("ver-ldr", ldr_id=ldr.id)
+    return redirect("ver-ldr", ldr_id=ldr.id) 
+
+# Esta función impura difiere de buscar_contenido en que regresa los resultados como json
+def buscar_usuarios(request):
+    query = request.GET.get("q", "")
+    coincidencias = []
+    if query:
+        coincidencias = [{"id": user.id, "nombre": user.username} for user in User.objects.filter(username__icontains=query)] 
+
+    return JsonResponse(coincidencias, safe=False)
+
+def buscar_canciones(request):
+    query = request.GET.get("q", "")
+    coincidencias = []
+    if query:
+        coincidencias = [{"id": cancion.id, "nombre": cancion.nombre, "autor": cancion.autor.usuario.username} for cancion in Cancion.objects.filter(nombre__icontains=query)]
+    return JsonResponse(coincidencias, safe=False)
+
+@login_required
+def añadir_cancion_ldr(request, ldr_id, cid):
+    usuario = request.user
+    ldr = get_object_or_404(LDR, id=ldr_id)
+    cancion = get_object_or_404(Cancion, id=cid)
+
+    if ldr.editores.contains(usuario):
+        ldr.canciones.add(cancion)
+        return HttpResponse(status=204)
+    else:
+        return HtttpResponse("No eres editor de esta lista", status=500)

@@ -2,7 +2,7 @@
 
 {% block contenido %}
 <form method="get" action="{% url 'buscar' %}">
-    <input type="text" name="q" value="{{ query }}" placeholder="Enter name to search...">
+    <input type="text" name="q" value="{{ query }}" placeholder="Introdice el nombre de lo que gustes buscar">
     
     <select name="tipo">
         <option value=0 {% if tipo == 0 %}selected{% endif %}>Usuario</option>
@@ -33,7 +33,7 @@
         {% endif %}
     {% endfor %}
     {% else %}
-    <h1>No se encntraron coincidencias :c</h1>
+    <h1>No se encontraron coincidencias :c</h1>
     {% endif %}
     
 {% endif %}
