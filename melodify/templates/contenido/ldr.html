@@ -3,16 +3,24 @@
 {{ canciones.values_list|json_script:"canciones" }}
 
 {% block titulo %}
-<div class="title-container">
+<div class="ldr-title-container">
   {% if is_editor %}
-  <div style="display: flex; align-items: center; gap: 10px;">
-    <form method="post" style="display: flex; align-items: center; gap: 5px;">
-      {% csrf_token %}
-      <input type="text" name="renombre" value="{{ nombre }}" style="font-size: 1.5em; padding: 5px;">
-      <button type="submit" style="background: none; border: none; cursor: pointer;">
-        ✏️
-      </button>
-    </form>
+  <form method="post" style="display: flex; align-items: center; gap: 5px;">
+    {% csrf_token %}
+    <button class="ldr-config-button" type="submit">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+    </button>
+    <input type="text" name="renombre" value="{{ nombre }}" style="font-size: 1.5em; padding: 5px;">
+  </form>
+  <div style="position: relative">
+    <button class="ldr-config-button" onclick="toggleDropdownMenu('ldrConfigMenu')">
+      <i class="fa fa-cog" aria-hidden="true"></i>
+    </button>
+    <div class="dropdown-menu" id="ldrConfigMenu" style="right: auto; left: 0;">
+      <a href="#">
+        <div class="menu-item" onclick="confirmarAbandono()">Abandonar Lista de Reproducción</div>
+      </a>
+    </div>
   </div>
   {% else %}
   <h1>{{ nombre }}</h1>
@@ -31,8 +39,8 @@
         <div class="song-title">{{ cancion.nombre }}</div>
         <div class="song-artist">{{ cancion.autor.usuario.nombre_usuario }}</div>
       </div>
-      {% if  is_editor %}
-      <button class="remove-song-button", onclick="eliminarCancion('{{ cancion.id }}')">
+      {% if is_editor %}
+      <button class="remove-song-button" , onclick="eliminarCancion('{{ cancion.id }}')">
         <i class="fa fa-trash" aria-hidden="true"></i>
       </button>
       {% endif %}
@@ -54,7 +62,6 @@
     <input type="text" class="search-input" id="searchInput" placeholder="Busca canciones para añadir">
   </div>
 
-
   <div class="search-display" id="searchDisplay">
 
   </div>
@@ -62,7 +69,7 @@
 <script>
   const ldr_id = "{{ id }}";
   const canciones = JSON.parse("{{ ids }}");
-  
+
   async function eliminarCancion(cid) {
     try {
       let response = await fetch(`${window.location.origin}/eldr/${ldr_id}/${cid}`);
@@ -72,6 +79,10 @@
     }
   }
 
+  function confirmarAbandono() {
+    if (confirm("¿Estas seguro de querer abandonar tu rol como editor de la lista? {% if is_ultimo %} \n Si sales de esta lista se eliminará. {% endif %}"))
+      window.location.href = `${window.location.origin}/sldr/${ldr_id}`;
+  }
 
   document.addEventListener('DOMContentLoaded', async function () {
     const openBtn = document.getElementById('add-btn');

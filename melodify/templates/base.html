@@ -17,7 +17,7 @@
             <img src="{%static 'images/logo.png'%}" alt="Melodify" class="logo-image">
         </div>
 
-        <div class="title">{% block titulo%}{% endblock titulo %}</div>
+        {% block titulo%}{% endblock titulo %}
 
         <div class="nav-buttons">
            <a href="{% url  'buscar'%}">
@@ -28,10 +28,10 @@
             <button class="nav-button">
                 <i class="fas fa-bell"></i>
             </button>
-            <button class="nav-button" onclick="toggleAddMenu()">
+            <button class="nav-button" onclick="toggleDropdownMenu('addMenu')">
                 <i class="fas fa-add"></i>
             </button>
-            <div class="add-menu" id = "addMenu">
+            <div class="dropdown-menu" id = "addMenu">
                 <a href={% url 'inicio' %}>
                     <div class="menu-item" onclick="console.log('Prueba 1')"> Subir Canción </div>
                 </a>
@@ -49,8 +49,8 @@
     {% endblock contenido %}
 
     <script>
-        function toggleAddMenu() {
-            const menu = document.getElementById("addMenu");
+        function toggleDropdownMenu(elementID) {
+            const menu = document.getElementById(elementID);
             menu.style.display = menu.style.display === "block" ? "none" : "block"; 
         }
     </script>

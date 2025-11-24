@@ -67,10 +67,11 @@ body {
     margin: 0 auto;
 }
 
-.add-menu {
+.dropdown-menu {
     display: none;
     position: absolute;
     top: 100%;
+    right: 0;
     background: white;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -84,6 +85,7 @@ body {
     cursor: pointer;
     border-bottom: 1px solid #eee;
     color: black;
+    white-space: nowrap;
 }
 
 .menu-item:hover {
@@ -257,10 +259,31 @@ body {
     color: #007bff;
 }
 
-.title-container {
+.ldr-title-container {
     display: flex;
-    align-items: center;
     gap: 10px;
+    position: relative;
+    z-index: 1001;
+}
+
+.ldr-config-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+        
+.ldr-config-button-button:hover {
+    color: whitesmoke;
+    background-color: black;
+}
+        
+.ldr-config-button-button:active {
+    transform: scale(0.95);
 }
 
 #edit-name-form {

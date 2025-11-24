@@ -23,9 +23,12 @@ def ver_ldr(request, ldr_id=None):
     else:
         is_editor = False
 
+    is_ultimo = ldr.editores.all().count() == 1
+
     context = {
         'id': ldr_id,
         'is_editor': is_editor,
+        'is_ultimo': is_ultimo,
         'nombre': ldr.nombre,
         'canciones': canciones,
         'ids': [c.id for c in canciones],
@@ -89,7 +92,7 @@ def añadir_cancion_ldr(request, ldr_id, cid):
         ldr.canciones.add(cancion)
         return HttpResponse(status=204)
     else:
-        return HtttpResponse("No eres editor de esta lista", status=401)
+        return HttpResponse("No eres editor de esta lista", status=401)
 
 @login_required
 def eliminar_cancion_ldr(request, ldr_id, cid):
@@ -101,4 +104,15 @@ def eliminar_cancion_ldr(request, ldr_id, cid):
         ldr.canciones.remove(cancion)
         return HttpResponse(status=204)
     else:
-        return HtttpResponse("No eres editor de esta lista", status=401)
+        return HttpResponse("No eres editor de esta lista", status=401)
+
+@login_required
+def abandonar_ldr(request, ldr_id):
+    usuario = request.user
+    ldr = get_object_or_404(LDR, id=ldr_id)
+
+    ldr.editores.remove(usuario)
+    if ldr.editores.all().count() == 0:
+        ldr.delete()
+    
+    return redirect("inicio")
