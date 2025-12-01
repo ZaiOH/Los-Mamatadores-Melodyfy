@@ -10,9 +10,15 @@ class Reporte(models.Model):
     
 
 class Invitacion(models.Model):
-    lista = models.ForeignKey(User, models.CASCADE)
+    ACEPTACION_CHOICES = {
+        'R': 'Rechazada',
+        'P': 'Pendiente',
+        'A': 'Aceptada',
+    }
+    lista = models.ForeignKey(LDR, models.CASCADE)
     destino = models.ForeignKey(User, models.CASCADE, related_name="invitado")
     intentos = models.PositiveSmallIntegerField()
+    estado = models.CharField(max_length=1, choices=ACEPTACION_CHOICES, default='A')
 
 class Seguir(models.Model):
     seguidor = models.ForeignKey(User, models.CASCADE, related_name="usuario_seguidor")

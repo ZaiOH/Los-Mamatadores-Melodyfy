@@ -8,7 +8,7 @@
     {% load static %}
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{%static 'css/main.css'%}"}> 
+    <link rel="stylesheet" href="{%static 'css/main.css'%}">
 </head>
 
 <body>
@@ -20,40 +20,66 @@
         {% block titulo%}{% endblock titulo %}
 
         <div class="nav-buttons">
-           <a href="{% url  'buscar'%}">
+            <a href="{% url  'buscar'%}">
                 <button class="nav-button">
                     <i class="fas fa-search"></i>
                 </button>
-            </a> 
-            <button class="nav-button">
+            </a>
+            {% if user.is_authenticated %}
+            <button class="nav-button" onclick="toggleDropdownMenu('notifications')">
                 <i class="fas fa-bell"></i>
             </button>
+            <div class="dropdown-menu" id="notifications">
+                <div class="scroll-container" style="height: auto;">
+
+                    {% for notificacion in notificaciones %}
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-name">Fuiste invitado a {{notificacion.nombre}}</div>
+                        </div>
+                        <button class="circle-btn invitation-accept"
+                            onclick="window.location.href = '{% url  'aceptar-invldr' notificacion.id%}'">
+                            <i class="fa fa-check"></i>
+                        </button>
+                        <button class="circle-btn invitation-reject"
+                            onclick="window.location.href = '{% url  'rechazar-invldr' notificacion.id%}'">
+                            <i class="fa fa-ban"></i>
+                        </button>
+                    </div>
+                    {% empty %}
+                    <p>No tienes notificaciones</p>
+                    {% endfor %}
+                </div>
+            </div>
             <button class="nav-button" onclick="toggleDropdownMenu('addMenu')">
                 <i class="fas fa-add"></i>
             </button>
-            <div class="dropdown-menu" id = "addMenu">
+            <div class="dropdown-menu" id="addMenu">
+                {% if is_artista %}
                 <a href={% url 'inicio' %}>
-                    <div class="menu-item" onclick="console.log('Prueba 1')"> Subir Canción </div>
+                    <div class="menu-item"> Subir Canción </div>
                 </a>
+                {% endif %}
                 <a href={% url 'crear-ldr' %}>
-                    <div class="menu-item" onclick="console.log('Prueba 2')"> Crear Lista de Reproducción </div>
+                    <div class="menu-item"> Crear Lista de Reproducción </div>
                 </a>
             </div>
+            {% endif %}
             <button class="nav-button">
                 <i class="fas fa-music"></i>
             </button>
         </div>
     </div>
 
-    {% block contenido %} 
+    {% block contenido %}
     {% endblock contenido %}
 
     <script>
         function toggleDropdownMenu(elementID) {
             const menu = document.getElementById(elementID);
-            menu.style.display = menu.style.display === "block" ? "none" : "block"; 
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
         }
     </script>
 </body>
 
-</html >
+</html>

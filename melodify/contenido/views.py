@@ -5,9 +5,27 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from contenido.models import LDR, Cancion
+from usuarios.models import Artista
+from interaccion.models import Invitacion
 
-class VistaPrincipal(TemplateView):
-    template_name = "base.html"
+# Esta función crea el contexto compartido de todos los templates y le anexa el contexto especifico de cada vista
+def make_context(usuario, extra_context = {}):
+    if usuario.is_anonymous:
+        is_artista = False 
+        notificaciones = []
+    else:
+        is_artista = Artista.objects.contains(usuario)
+        notificaciones = [{
+            'id': i.id,
+            'nombre': i.lista.nombre,
+        } for i in Invitacion.objects.filter(destino=usuario, estado='P')]
+    return {
+        'is_artista': is_artista,
+        'notificaciones': notificaciones,
+    } | extra_context
+
+def vista_principal(request, ldr_id=None):
+    return render(request, 'base.html', context = make_context(request.user))
 
 def ver_ldr(request, ldr_id=None):
     usuario = request.user
@@ -18,21 +36,25 @@ def ver_ldr(request, ldr_id=None):
         ldr.save()
         return redirect("ver-ldr", ldr_id=ldr_id)
     canciones = ldr.canciones.all()
+    editores = [e.id for e in ldr.editores.all()]
     if usuario is not None and not usuario.is_anonymous:
+        is_artista = Artista.objects.contains(usuario) 
         is_editor = ldr.editores.contains(usuario)
     else:
         is_editor = False
 
     is_ultimo = ldr.editores.all().count() == 1
 
-    context = {
+    context = make_context(usuario, {
         'id': ldr_id,
+        'is_artista': is_artista,
         'is_editor': is_editor,
         'is_ultimo': is_ultimo,
         'nombre': ldr.nombre,
         'canciones': canciones,
-        'ids': [c.id for c in canciones],
-    }
+        'cids': [c.id for c in canciones],
+        'editores': editores,
+    })
 
     return render(request, 'contenido/ldr.html', context)
 
