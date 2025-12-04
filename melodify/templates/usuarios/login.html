@@ -188,9 +188,38 @@
         }
     </style>
 </head>
+<script>
+    /**
+     * Script para ocultar automáticamente los mensajes de error
+     * después de un tiempo definido.
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+        // Selecciona todos los elementos con la clase 'error-message'
+        const errorMessages = document.querySelectorAll('.error-message');
+        
+        // Tiempo en milisegundos (5 segundos) antes de ocultar el mensaje
+        const timeoutDuration = 5000; 
+
+        // Itera sobre cada mensaje encontrado
+        errorMessages.forEach(function(message) {
+            // Establece un temporizador para ocultar el mensaje
+            setTimeout(function() {
+                // Aplica una transición suave para que desaparezca
+                message.style.transition = 'opacity 0.5s ease';
+                message.style.opacity = '0';
+
+                // Una vez que la transición termina, quita el elemento del DOM
+                setTimeout(function() {
+                    message.remove();
+                }, 500); // Espera 0.5s para que termine la transición de opacidad
+                
+            }, timeoutDuration);
+        });
+    });
+</script>
 <body>
     <div class="login-container">
-        <a href="/users" class="close-btn">&times;</a>
+        <a href="/" class="close-btn">&times;</a>
         
         <div class="logo-container">
             <img src="../../static/images/logo.png" alt="Melodify Logo" class="melodify-logo">
@@ -207,7 +236,7 @@
                 <input type="text" 
                        id="id_username" 
                        name="username" 
-                       value="{{ form.username.value}}"
+                       value="{{ form.username.value|default:''}}"
                        placeholder="Nombre Usuario"
                        required>
             </div>
@@ -217,7 +246,7 @@
                 <input type="password" 
                        id="id_password" 
                        name="password"
-                       value="{{ form.password.value}}"
+                       value="{{ form.password.value|default:''}}"
                        placeholder="Contraseña"
                        required>
             </div>
@@ -234,7 +263,7 @@
 
             <div class="button-group">
                 <button type="submit" class="login-btn">Ingresar</button>
-                <a href="/users/register" class="register-btn">
+                <a href="/registrar" class="register-btn">
                     <button type="button" class="register-btn">Registrarse</button>
                 </a>
                 

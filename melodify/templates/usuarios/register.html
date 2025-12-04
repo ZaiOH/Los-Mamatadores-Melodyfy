@@ -1,12 +1,199 @@
-<!-- templates/accounts/register.html -->
-{% extends 'base.html' %}
-{% block title %}Registro{% endblock %}
 
-{% block content %}
-<h2>Registro</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Registrar</button>
-</form>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta</title>
+    {% load static %} 
+    <link rel="stylesheet" href="../../static/css/main.css"> 
+    <style>
+        
+        /* Estilos del logo y el área superior */
+        .logo-container {
+            background-color: black; /* Color de fondo superior */
+            padding: 30px 20px 20px 20px; /* Espacio alrededor del logo */
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .login-btn {
+            /* Los dos botones ocuparán el mismo espacio */
+            width: 100%; 
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #7B5AC4;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background-color: #C8746B; 
+            border-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            padding: 0; 
+            position: relative;
+            overflow: hidden; 
+        }
+
+        .logo-container {
+            background-color: black;
+            padding: 30px 20px 20px 20px; 
+            text-align: center;
+        }
+
+        .melodify-logo {
+            width: 150px; 
+            height: auto;
+        }
+
+        /* Contenido inferior, donde está el formulario */
+        .login-header, .form-group, .button-group {
+            padding-left: 30px; 
+            padding-right: 30px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: white; 
+            cursor: pointer;
+            z-index: 10; 
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-top: 20px; 
+            margin-bottom: 30px;
+        }
+        
+        .login-header h1 {
+            color: black; 
+            font-size: 24px;
+            margin-bottom: 0; 
+            font-weight: 500;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: none; 
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px 15px; 
+            background-color: #F8ECEC; 
+            border: 1px solid #C8746B; 
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Ajustes para el botón único */
+        .button-group {
+            /* Se elimina display: flex y gap ya que solo hay un botón */
+            margin-bottom: 30px; 
+        }
+        
+        .login-btn {
+            width: 100%; /* El botón ocupa todo el ancho */
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: black;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .error-message {
+            /* Color de letra rojo */
+            color: red; 
+            /* Para separarlo de los campos y los botones */
+            margin-top: 5px;
+            margin-bottom: 20px; 
+            /* Centrar el texto (opcional) */
+            text-align: center; 
+            /* Asegúrate de que tenga el padding horizontal del formulario */
+            padding: 0 30px; 
+            /* Fuente un poco más audaz para resaltarlo */
+            font-weight: 500; 
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <a href="/login" class="close-btn">&times;</a>
+        
+        <div class="logo-container">
+            <img src="../../static/images/logo.png" alt="Melodify Logo" class="melodify-logo">
+        </div>
+
+        <div class="login-header">
+            <h1>Crear cuenta</h1>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+
+            {% for field in form %}
+                <div class="form-group">
+                    
+                    {{ field }}
+
+                    {% if field.errors %}
+                        <div class="field-errors" style="color: red;margin-top: 6px; margin-bottom: 3px;">
+                            {% for error in field.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+        
+                    
+                </div>
+            {% endfor %}
+
+            <div class="button-group">
+                <button type="submit" class="login-btn">Crear</button>
+            </div>
+        </form>  
+    </div>
+</body>
+</html>

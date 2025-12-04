@@ -39,9 +39,17 @@
                     <div class="menu-item" onclick="console.log('Prueba 2')"> Crear Lista de Reproducción </div>
                 </a>
             </div>
-            <button class="nav-button">
+            <button class="nav-button" onclick="toggleuserMenu()">
                 <i class="fas fa-music"></i>
             </button>
+            <div class="add-menu" id = "userMenu">
+                <a href={% url 'inicio' %}>
+                    <div class="menu-item" onclick="console.log('Prueba 3')"> Ver usuario </div>
+                </a>
+                <a href={% url 'logout' %}>
+                    <div class="menu-item" onclick="console.log('Prueba 4')"> Cerrar sesion </div>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -51,6 +59,13 @@
     <script>
         function toggleAddMenu() {
             const menu = document.getElementById("addMenu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block"; 
+        }
+    </script>
+
+    <script>
+        function toggleuserMenu() {
+            const menu = document.getElementById("userMenu");
             menu.style.display = menu.style.display === "block" ? "none" : "block"; 
         }
     </script>

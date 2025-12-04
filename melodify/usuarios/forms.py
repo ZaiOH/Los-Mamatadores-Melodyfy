@@ -1,35 +1,74 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-class RegistroFormUsuario(forms.ModelForm):
-    contraseña = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
-    contraseña_confirmacion = forms.CharField(widget=forms.PasswordInput, label="Confirmar Contraseña")
+class RegistroFormUsuario(UserCreationForm):
 
-    fecha_nacimiento = forms.DateField(
-        label='Fecha de Nacimiento',
-        widget=forms.DateInput(attrs={'type': 'date'}),
+    email = forms.EmailField(
+        label='Correo electrónico',
+        max_length=254,
+        required=True,
+        widget=forms.EmailInput(attrs={'placeholder': 'Correo electrónico'})
+    )
+    
+    username = forms.CharField(
+        label='Nombre de usuario',
+        max_length=150,
+        widget=forms.TextInput(attrs={'placeholder': 'Nombre de usuario'})
     )
 
-    class Meta:
+    password1 = forms.CharField(
+        label='Contraseña',
+        widget=forms.PasswordInput(attrs={'placeholder': 'Contraseña'}),
+        help_text=None,
+    )
+
+    password2 = forms.CharField(
+        label='Validar contraseña',
+        widget=forms.PasswordInput(attrs={'placeholder': 'Validar contraseña'}),
+        help_text=None,
+    )
+
+    class Meta(UserCreationForm.Meta):
         model = User
         fields = ['username', 'email']
 
-    def clean_password_confirm(self):
-        contraseña = self.cleaned_data.get('contraseña')
-        contraseña_confirmacion = self.cleaned_data.get('contraseña_confirmacion')
-        if contraseña and contraseña_confirmacion and contraseña != contraseña_confirmacion:
-            raise ValidationError(_("Las contraseñas no coinciden"))
-        return contraseña_confirmacion
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        email = cleaned_data.get('email')
+        username = cleaned_data.get('username')
 
-    def save(self, commit=True):
-        usuario = super().save(commit=False)
-        usuario.set_password(self.cleaned_data['contraseña'])
-        if commit:
-            usuario.save()
-        return usuario
+        if cleaned_data.get("password") != cleaned_data.get("password2"):
+            self.add_error(
+                'password2',
+                ValidationError(
+                    "Las contraseñas no coinciden." 
+                )
+            )
+
+        
+        if email:
+            if User.objects.filter(email=email).exists():
+                self.add_error(
+                    'email',
+                    ValidationError(
+                        "El correo que ingresaste ya está asociado a una cuenta."
+                    )
+                )
+
+        if username:
+            if User.objects.filter(username=username).exists():
+                self.add_error(
+                    'username',
+                    ValidationError(
+                        "El nombre de usuario que ingresaste ya está asociado a una cuenta."
+                    )
+                )
+                
+        return cleaned_data
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Nombre de usuario")

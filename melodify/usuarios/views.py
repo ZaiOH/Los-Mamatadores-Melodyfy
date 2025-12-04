@@ -27,12 +27,16 @@ def login_usuario(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, f"Bienvenido, {user.username}!")
                 return redirect('inicio')
             else:
                 messages.error(request, "Nombre de usuario o contraseña incorrectos.")
+        else:
+            form = LoginForm()
+            messages.error(request, "Nombre de usuario o contraseña incorrectos.")
+
     else:
         form = LoginForm()
+
     return render(request, 'usuarios/login.html', {'form': form})
 
 @login_required
