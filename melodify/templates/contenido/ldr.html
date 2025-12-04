@@ -36,18 +36,20 @@
 <div class="scroll-container">
   <div class="songs-list">
     {% for cancion in canciones %}
-    <div class="song-item" data-song="Blinding Lights">
-      <div class="album-art">🎵</div>
-      <div class="song-details">
-        <div class="song-title">{{ cancion.nombre }}</div>
-        <div class="song-artist">{{ cancion.autor.usuario.nombre_usuario }}</div>
+    <a href="{% url 'ver-ldr' ldr_id=id %}?play={{ cancion.id }}">
+      <div class="song-item" data-song="Blinding Lights">
+        <div class="album-art">🎵</div>
+        <div class="song-details">
+          <div class="song-title">{{ cancion.nombre }}</div>
+          <div class="song-artist">{{ cancion.autor.usuario.nombre_usuario }}</div>
+        </div>
+        {% if is_editor %}
+        <button class="remove-song-button" , onclick="eliminarCancion('{{ cancion.id }}')">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </button>
+        {% endif %}
       </div>
-      {% if is_editor %}
-      <button class="remove-song-button" , onclick="eliminarCancion('{{ cancion.id }}')">
-        <i class="fa fa-trash" aria-hidden="true"></i>
-      </button>
-      {% endif %}
-    </div>
+    </a>
     {% endfor %}
     {% if is_editor %}
     <div class="add-song-item" id="add-song-btn">
@@ -138,7 +140,7 @@
     function crearResultado(elemento, html = true) {
       const resultado = document.createElement('div');
       resultado.className = 'card';
-      
+
       if (html) {
         resultado.onclick = async function (e) {
           try {

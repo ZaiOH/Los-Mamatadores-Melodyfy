@@ -3,38 +3,63 @@
 {% block contenido %}
 <form method="get" action="{% url 'buscar' %}">
     <input type="text" name="q" value="{{ query }}" placeholder="Introdice el nombre de lo que gustes buscar">
-    
+
     <select name="tipo">
         <option value=0 {% if tipo == 0 %}selected{% endif %}>Usuario</option>
         <option value=1 {% if tipo == 1 %}selected{% endif %}>Canción</option>
         <option value=2 {% if tipo == 2 %}selected{% endif %}>Lista de Reproducción</option>
     </select>
-    
+
     <button type="submit">Search</button>
 </form>
+
+
 {% if query %}
-    <h2>Resultados:</h2>
-    {% if resultados %}
-    {% for resultado in resultados %}
-        {% if tipo == 0 %}
-        <a href= {% url 'ver-ldr' ldr_id=resultado.id%}>
-            <li>{{ resultado.nombre }}</li>
-        </a>
-        {% endif %}
-        {% if tipo == 1 %}
-        <a href= {% url 'ver-ldr' ldr_id=resultado.id%}>
-            <li>{{ resultado.nombre }}</li>
-        </a>
-        {% endif %}
-        {% if tipo == 2 %}
-            <a href= {% url 'ver-ldr' ldr_id=resultado.id%}>
-                <li>{{ resultado.nombre }}</li>
-            </a>
-        {% endif %}
-    {% endfor %}
-    {% else %}
-    <h1>No se encontraron coincidencias :c</h1>
-    {% endif %}
-    
+<h2>Resultados:</h2>
+
+{% if resultados %}
+{% for resultado in resultados %}
+{% if tipo == 0 %}
+<a href="{% url 'inicio' %}">
+    <div class="card">
+        <div class="card-icon">
+            <i class="fa fa-user"></i>
+        </div>
+        <div class="card-content">
+            <div class="card-name">{{resultado.username}}</div>
+        </div>
+</a>
+</div>
+{% endif %}
+{% if tipo == 1 %}
+<a href="{% url 'inicio' %}?play={{ resultado.id }}">
+    <div class="card">
+        <div class="card-icon">
+            <i class="fa fa-music"></i>
+        </div>
+        <div class="card-content">
+            <div class="card-name">{{resultado.nombre}}</div>
+            <div class="card-author">Por {{resultado.autor.usuario.username}}</div>
+        </div>
+    </div>
+</a>
+{% endif %}
+{% if tipo == 2 %}
+<a href="{% url 'ver-ldr' ldr_id=resultado.id%}">
+    <div class="card">
+        <div class="card-icon">
+            <i class="fa fa-list"></i>
+        </div>
+        <div class="card-content">
+            <div class="card-name">{{resultado.nombre}}</div>
+        </div>
+    </div>
+</a>
+{% endif %}
+{% endfor %}
+{% else %}
+<h1>No se encontraron coincidencias :c</h1>
+{% endif %}
+
 {% endif %}
 {% endblock %}

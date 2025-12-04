@@ -74,7 +74,7 @@ def ver_ldr(request, ldr_id=None):
 
     is_ultimo = ldr.editores.all().count() == 1
 
-    context = make_context(usuario, extra_context={
+    context = make_context(request, extra_context={
         'id': ldr_id,
         'is_editor': is_editor,
         'is_ultimo': is_ultimo,
