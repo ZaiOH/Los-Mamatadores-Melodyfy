@@ -41,7 +41,7 @@ class RegistroFormUsuario(UserCreationForm):
         email = cleaned_data.get('email')
         username = cleaned_data.get('username')
 
-        if cleaned_data.get("password") != cleaned_data.get("password2"):
+        if cleaned_data.get("password1") != cleaned_data.get("password2"):
             self.add_error(
                 'password2',
                 ValidationError(
