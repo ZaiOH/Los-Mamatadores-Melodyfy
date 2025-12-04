@@ -4,17 +4,19 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
-from contenido.models import LDR, Cancion
+from .models import LDR, Cancion
+from .forms import CancionForm
 from usuarios.models import Artista
 from interaccion.models import Invitacion
-
+from datetime import datetime
+import os
 # Esta función crea el contexto compartido de todos los templates y le anexa el contexto especifico de cada vista
 def make_context(usuario, extra_context = {}):
     if usuario.is_anonymous:
         is_artista = False 
         notificaciones = []
     else:
-        is_artista = Artista.objects.contains(usuario)
+        is_artista = Artista.objects.filter(usuario=usuario).exists()
         notificaciones = [{
             'id': i.id,
             'nombre': i.lista.nombre,
@@ -27,6 +29,26 @@ def make_context(usuario, extra_context = {}):
 def vista_principal(request, ldr_id=None):
     return render(request, 'base.html', context = make_context(request.user))
 
+@login_required
+def subir_cancion(request):
+    artista = get_object_or_404(Artista, usuario=request.user)
+    if request.method == 'POST':
+        form = CancionForm(request.POST, request.FILES)
+        if form.is_valid():
+            archivo = request.FILES['archivo']
+            cancion = Cancion.objects.create(
+                nombre = form.cleaned_data["nombre"],
+                autor = artista,
+                publicacion = datetime.now(),
+            )
+            archivo.name = f'{cancion.id}.mp3'
+            cancion.archivo = archivo
+            cancion.save()
+            return render(request, 'contenido/uploadsuccess.html', context=make_context(request.user))
+    else:
+        form = CancionForm()    
+    return render(request, 'contenido/upload.html', context=make_context(request.user))
+
 def ver_ldr(request, ldr_id=None):
     usuario = request.user
     ldr = get_object_or_404(LDR, id=ldr_id)
@@ -38,7 +60,7 @@ def ver_ldr(request, ldr_id=None):
     canciones = ldr.canciones.all()
     editores = [e.id for e in ldr.editores.all()]
     if usuario is not None and not usuario.is_anonymous:
-        is_artista = Artista.objects.contains(usuario) 
+        is_artista = Artista.objects.filter(usuario=usuario).exists() 
         is_editor = ldr.editores.contains(usuario)
     else:
         is_editor = False

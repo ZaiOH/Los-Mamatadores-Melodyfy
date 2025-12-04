@@ -1,0 +1,140 @@
+{% extends 'base.html'%}
+
+{% block contenido %}
+<style>
+    .song-name {
+        display: block;
+        width: 558px;
+        margin: 0 auto 20px auto;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .upload-row {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .upload-icon {
+        font-size: 48px;
+    }
+
+    .upload-button {
+        background: white;
+        border: 2px solid #ddd;
+        border-radius: 12px;
+        padding: 24px 32px;
+        cursor: pointer;
+        text-align: center;
+        min-width: 280px;
+    }
+
+    .upload-button:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+    }
+
+    .upload-button.has-file {
+        border-color: #4CAF50;
+        border-style: solid;
+        background: #f8fff8;
+    }
+
+    .upload-icon {
+        background: white;
+        border: 2px solid #ddd;
+        border-radius: 50%;
+        padding: 24px 32px;
+        /* Adjust these values as needed */
+        cursor: pointer;
+        text-align: center;
+        min-width: 120px;
+        aspect-ratio: 1/1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    .upload-button:hover {
+        border-color: #4CAF50;
+    }
+
+    .upload-text {
+        font-size: 20px;
+        display: block;
+        font-weight: 500;
+    }
+
+    .filename {
+        display: none;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        word-break: break-word;
+        text-align: center;
+        max-width: 100%;
+        padding: 5px;
+    }
+
+    .file-type {
+        color: #666;
+        font-size: 16px;
+        display: block;
+        margin-top: 8px;
+    }
+
+    .file-input {
+        display: none;
+    }
+</style>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="text" placeholder="Nombre de la canción" class="song-name" name="nombre" required>
+    <div class="upload-row">
+        {% csrf_token %}
+        <button class="upload-icon" type="submit">
+            <i class="fa fa-upload" aria-hidden="true"></i>
+        </button>
+        <label class="upload-button">
+            <span class="upload-text">Da clic aquí para cargar la canción</span>
+            <span class="filename"></span>
+            <span class="file-type">.mp3</span>
+            <input type="file" name="archivo" class="file-input" accept=".mp3" required>
+        </label>
+    </div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.querySelector('.file-input');
+        const uploadText = document.querySelector('.upload-text');
+        const filenameDisplay = document.querySelector('.filename');
+        const uploadButton = document.querySelector('.upload-button');
+
+        fileInput.addEventListener('change', function (e) {
+            if (this.files && this.files[0]) {
+                const fileName = this.files[0].name;
+
+                uploadText.style.display = 'none';
+                filenameDisplay.textContent = fileName;
+                filenameDisplay.style.display = 'block';
+
+                uploadButton.classList.add('has-file');
+            } else {
+                uploadText.style.display = 'block';
+                filenameDisplay.textContent = '';
+                filenameDisplay.style.display = 'none';
+                uploadButton.classList.remove('has-file');
+            }
+        });
+    });
+</script>
+{% endblock %}

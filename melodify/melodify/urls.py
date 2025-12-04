@@ -16,9 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from contenido.views import vista_principal, buscar_canciones, buscar_usuarios, ver_ldr, buscar_contenido, crear_ldr, añadir_cancion_ldr, eliminar_cancion_ldr, abandonar_ldr
-from interaccion.views import invitar_ldr, aceptar_invitacion, rechazar_invitacion
-from usuarios.views import registrar_usuario, login_usuario, logout_usuario 
+from contenido.views import *
+from interaccion.views import *
+from usuarios.views import * 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +26,7 @@ urlpatterns = [
     path('registrar/', registrar_usuario, name ="registrar"),
     path('logout/', logout_usuario, name='logout'),
     path('', vista_principal, name = 'inicio'),
+    path('subir-cancion/', subir_cancion, name = 'subir'),
     path('ldr/<int:ldr_id>/', ver_ldr, name = 'ver-ldr'),
     path('aldr/<int:ldr_id>/<int:cid>', añadir_cancion_ldr, name='añadir-ldr'),
     path('eldr/<int:ldr_id>/<int:cid>', eliminar_cancion_ldr, name='eliminar-ldr'), 

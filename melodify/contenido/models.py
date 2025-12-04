@@ -8,8 +8,7 @@ class Cancion(models.Model):
     autor = models.ForeignKey(Artista, on_delete=models.CASCADE)
     publicacion = models.DateField()
     archivo = models.FileField(blank=True,null=True)
-    audio_link = models.CharField(max_length=200,blank=True,null=True)
-    duracion = models.CharField(max_length=20)
+    #duracion = models.CharField(max_length=20)
     paginate_by = 2
 
     def __str__(self):
