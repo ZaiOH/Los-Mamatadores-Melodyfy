@@ -56,7 +56,7 @@
             </button>
             <div class="dropdown-menu" id="addMenu">
                 {% if is_artista %}
-                <a href={% url 'inicio' %}>
+                <a href={% url 'subir' %}>
                     <div class="menu-item"> Subir Canción </div>
                 </a>
                 {% endif %}
@@ -74,12 +74,23 @@
     {% block contenido %}
     {% endblock contenido %}
 
+    {% if cancion %}
+    <div id="audio-player"
+        style="position: fixed; bottom: 0; left: 0; right: 0; background: #333; color: white; padding: 15px; z-index: 1000;">
+        <audio autoplay controls style="width: 100%;">
+            <source src="{{ cancion }}" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    {% endif %}
+
     <script>
         function toggleDropdownMenu(elementID) {
             const menu = document.getElementById(elementID);
             menu.style.display = menu.style.display === "block" ? "none" : "block";
         }
     </script>
+
 </body>
 
 </html>

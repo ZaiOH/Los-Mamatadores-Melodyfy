@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from contenido.views import *
 from interaccion.views import *
 from usuarios.views import * 
@@ -38,6 +40,6 @@ urlpatterns = [
     path('buscar/', buscar_contenido, name = "buscar"),
     path('usuarios', buscar_usuarios),
     path('canciones', buscar_canciones),
-]
+]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # urlpatterns += staticfiles_urlpatterns()
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

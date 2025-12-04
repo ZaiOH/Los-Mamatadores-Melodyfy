@@ -11,7 +11,9 @@ from interaccion.models import Invitacion
 from datetime import datetime
 import os
 # Esta función crea el contexto compartido de todos los templates y le anexa el contexto especifico de cada vista
-def make_context(usuario, extra_context = {}):
+def make_context(request, extra_context = {}):
+    usuario = request.user
+    cid = request.GET.get('play')
     if usuario.is_anonymous:
         is_artista = False 
         notificaciones = []
@@ -21,13 +23,19 @@ def make_context(usuario, extra_context = {}):
             'id': i.id,
             'nombre': i.lista.nombre,
         } for i in Invitacion.objects.filter(destino=usuario, estado='P')]
+    if cid:
+        c = get_object_or_404(Cancion, id=cid)
+        cancion = f'media/{c.archivo}'
+    else:
+        cancion = None
     return {
         'is_artista': is_artista,
         'notificaciones': notificaciones,
+        'cancion': cancion,
     } | extra_context
 
 def vista_principal(request, ldr_id=None):
-    return render(request, 'base.html', context = make_context(request.user))
+    return render(request, 'base.html', context = make_context(request))
 
 @login_required
 def subir_cancion(request):
@@ -44,10 +52,10 @@ def subir_cancion(request):
             archivo.name = f'{cancion.id}.mp3'
             cancion.archivo = archivo
             cancion.save()
-            return render(request, 'contenido/uploadsuccess.html', context=make_context(request.user))
+            return render(request, 'contenido/uploadsuccess.html', context=make_context(request))
     else:
         form = CancionForm()    
-    return render(request, 'contenido/upload.html', context=make_context(request.user))
+    return render(request, 'contenido/upload.html', context=make_context(request))
 
 def ver_ldr(request, ldr_id=None):
     usuario = request.user
@@ -60,16 +68,14 @@ def ver_ldr(request, ldr_id=None):
     canciones = ldr.canciones.all()
     editores = [e.id for e in ldr.editores.all()]
     if usuario is not None and not usuario.is_anonymous:
-        is_artista = Artista.objects.filter(usuario=usuario).exists() 
         is_editor = ldr.editores.contains(usuario)
     else:
         is_editor = False
 
     is_ultimo = ldr.editores.all().count() == 1
 
-    context = make_context(usuario, {
+    context = make_context(usuario, extra_context={
         'id': ldr_id,
-        'is_artista': is_artista,
         'is_editor': is_editor,
         'is_ultimo': is_ultimo,
         'nombre': ldr.nombre,
