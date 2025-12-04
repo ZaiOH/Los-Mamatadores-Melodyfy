@@ -65,9 +65,17 @@
                 </a>
             </div>
             {% endif %}
-            <button class="nav-button">
+            <button class="nav-button" onclick="toggleDropdownMenu('userMenu')">
                 <i class="fas fa-music"></i>
             </button>
+            <div class="dropdown-menu" id = "userMenu">
+                <a href={% url 'inicio' %}>
+                    <div class="menu-item" onclick="console.log('Prueba 3')"> Ver usuario </div>
+                </a>
+                <a href={% url 'logout' %}>
+                    <div class="menu-item" onclick="console.log('Prueba 4')"> Cerrar sesion </div>
+                </a>
+            </div>
         </div>
     </div>
 
